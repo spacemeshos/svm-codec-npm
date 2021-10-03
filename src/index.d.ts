@@ -1,0 +1,37 @@
+export namespace svmCodec {
+    export { isInitialized };
+    export { init };
+    export { call };
+    export { wasmBufferAlloc };
+    export { wasmBufferFree };
+    export { wasmBufferLength };
+    export { wasmBufferDataSlice };
+    export { loadWasmBufferDataAsString };
+    export { loadWasmBufferError };
+    export { loadWasmBuffer };
+    export { copyToWasmBufferData };
+    export { newWasmBuffer };
+    export { loadWasmBufferDataAsJson };
+    export { encodeInput };
+    export { decodeInput };
+    export { OK_MARKER };
+    export { ERR_MARKER };
+}
+declare function isInitialized(): boolean;
+declare function init(code: BufferSource): Promise<void>;
+declare function call(funcName: any, buf: any): any;
+declare function wasmBufferAlloc(length: any): any;
+declare function wasmBufferFree(buf: any): any;
+declare function wasmBufferLength(buf: any): any;
+declare function wasmBufferDataSlice(buf: any, offset: any, length: any): Uint8Array;
+declare function loadWasmBufferDataAsString(buf: any): string;
+declare function loadWasmBufferError(buf: any): string;
+declare function loadWasmBuffer(buf: any): any;
+declare function copyToWasmBufferData(buf: any, data: any): void;
+declare function newWasmBuffer(object: any): any;
+declare function loadWasmBufferDataAsJson(buf: any): any;
+declare function encodeInput(object: any): any;
+declare function decodeInput(encodedData: any): any;
+declare const OK_MARKER: 1;
+declare const ERR_MARKER: 0;
+export {};
