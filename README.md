@@ -28,9 +28,9 @@ import {svmCodec} from "@spacemesh/svm-codec"
 const fs = require('fs');
 const Path = require('path');
 const path = Path.resolve(__dirname, 'svm_codec.wasm');
-const code = fs.readFileSync(path)
+const code = fs.readFileSync(path);
 
-await svmCodec.init(code)
+await svmCodec.init(code);
 
 // call svmCodec functions...
 
@@ -41,9 +41,10 @@ await svmCodec.init(code)
 1. Load the binary data of svm_codec.wasm from your website static resoruces.
 
 ```TypeScript
-import {svmCodec} from "@spacemesh/svm-codec"
+import {svmCodec} from "@spacemesh/svm-codec";
 const code = .... // load data from svm_codec.wasm here...
-await svmCodec.init(code)
+await svmCodec.init(code);
+
 // call svmCodec functions....
 ```
 -----
