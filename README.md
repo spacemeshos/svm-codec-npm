@@ -38,13 +38,13 @@ await svmCodec.init(code)
 
 ### Using - Web
 
-1. Read the binary data of svm_codec.wasm from your website resoruces.
+1. Load the binary data of svm_codec.wasm from your website static resoruces.
 
 ```TypeScript
 import {svmCodec} from "@spacemesh/svm-codec"
-const code = .... // load data from svm_codec.wasm
+const code = .... // load data from svm_codec.wasm here...
 await svmCodec.init(code)
-// call svmCodec functions...
+// call svmCodec functions....
 ```
 -----
 
