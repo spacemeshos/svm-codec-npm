@@ -18,7 +18,7 @@ Copy an `svm_codec.wasm` file to include in the package from the Spacemesh svm c
 ### Publishing
 `npm publish --access=public`
 
-### Using - Electron App
+### Using - Electron / Node.js App
 
 Add `svm_codec.wasm` to be used by the lib to your app's resources.
 
@@ -36,7 +36,7 @@ await svmCodec.init(code);
 
 ```
 
-### Using - Web
+### Using - Web App
 
 1. Load the binary data of svm_codec.wasm from your website static resoruces.
 
