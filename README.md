@@ -20,6 +20,7 @@ Copy an `svm_codec.wasm` file to include in the package from the Spacemesh svm c
 
 -----
 
-### Limitations
+### Known Issues
 - No CI yet.
 - No integration with svm-codec releases is implemented yet.
+- No tight types in Typescript typings yet.
