@@ -1,6 +1,6 @@
 {
   "name": "@spacemesh/svm-codec",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "collaborators": [
     "Aviv Eyal <aviveyal07@gmail.com>"
   ],
@@ -8,10 +8,10 @@
   "description": "svm-codec npm package for node and browser javascript apps.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/fix_me"
+    "url": "https://github.com/spacemeshos/svm-codec-npm"
   },
   "bugs": {
-    "url": "https://github.com/fix_me/issues"
+    "url": "https://github.com/spacemeshos/svm-codec-npm/issues"
   },
   "main": "dist/index.js",
   "sideeffects": false,
@@ -30,13 +30,12 @@
     "smapp"
   ],
   "files": [
-    "src/",
     "dist/",
     "LICENSE",
     "README.md"
   ],
   "author": "Spacemesh authors",
-  "homepage": "https://github.com/fix_me",
+  "homepage": "https://github.com/spacemeshos/svm-codec-npm",
   "license": "MIT",
   "devDependencies": {
     "@types/jest": "^27.0.2",

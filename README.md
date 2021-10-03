@@ -1,5 +1,5 @@
 ## svm-codec npm package
-A public npm package providing the Spacemesh svm-codec for browser and node.js apps.
+A [public npm package](https://www.npmjs.com/package/@spacemesh/svm-codec) providing the Spacemesh svm-codec for browser and node.js apps.
 
 ### Setup
 `yarn`
