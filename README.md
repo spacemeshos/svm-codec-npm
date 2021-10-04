@@ -30,10 +30,10 @@ Add `svm_codec.wasm` to be used by the lib to your app's resources.
 ```TypeScript
 
 
-import * as SvmCodec from '@spacemesh/svm-codec'
+import * as SvmCodec from '@spacemesh/svm-codec';
+import fs from 'fs';
+import Path from 'path';
 
-const fs = require('fs');
-const Path = require('path');
 const path = Path.resolve(__dirname, 'svm_codec.wasm');
 const code = fs.readFileSync(path);
 
@@ -48,7 +48,7 @@ await SvmCodec.init(code);
 Load the binary data of svm_codec.wasm from your website static resoruces.
 
 ```TypeScript
-import * as SvmCodec from '@spacemesh/svm-codec'
+import * as SvmCodec from '@spacemesh/svm-codec';
 
 const code = .... // load data from svm_codec.wasm here...
 await SvmCodec.init(code);

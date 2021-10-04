@@ -1,9 +1,8 @@
-import * as SvmCodec from "../dist";
-const fs = require('fs');
-const Path = require('path');
+import * as SvmCodec from '../dist';
+import fs from 'fs';
+import Path from 'path';
 
 // test helper functions
-
 function repeatString(s: string, byteLength: number) : string {
     const n = s.length;
     const t = byteLength * 2;
@@ -16,7 +15,6 @@ function repeatString(s: string, byteLength: number) : string {
 function generateAddress(s: string) : string {
     return repeatString(s, 20);
 }
-
 
 async function init() {
     const path = Path.resolve(__dirname, 'svm_codec.wasm');
