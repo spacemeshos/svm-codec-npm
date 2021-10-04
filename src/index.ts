@@ -15,17 +15,6 @@ export function isInitialized() {
     return (codec !== null)
 }
 
-// User input to the encodeDeployData function
-export interface DeployData {
-    svm_version: number,
-    code_version: number,
-    name: string,
-    desc: string,
-    code: string,
-    data: string,
-    ctors: Array<string>
-}
-
 // User input to the encodeSpawnData function
 export interface SpawnData {
     version: number,
@@ -42,29 +31,6 @@ export interface CallData {
     func_name: string,
     verifydata: Uint8Array,
     calldata: Uint8Array,
-}
-
-
-// Encodes the provided deploy template data
-export function encodeDeployData(data: DeployData) : Uint8Array {
-    const buf = newWasmBuffer(data);
-    const result = call("wasm_encode_deploy", buf);
-    const len = wasmBufferLength(result);
-    const slice = wasmBufferDataSlice(result, 0, len);
-
-    let errMessage : string = "";
-    if (slice[0] !== OK_MARKER) {
-        errMessage = loadWasmBufferError(result);
-    }
-
-    wasmBufferFree(buf);
-    wasmBufferFree(result);
-
-    if (errMessage.length > 0) {
-        throw errMessage;
-    }
-
-    return slice.slice(1);
 }
 
 

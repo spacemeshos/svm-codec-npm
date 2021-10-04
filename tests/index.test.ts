@@ -1,9 +1,3 @@
-//import * as SvmCodec from "../dist";
-
-// import {DeployData, encodeDeploy} from "../src";
-
-//import {DeployData, SpawnData, CallData,} from "../dist";
-
 import * as SvmCodec from "../dist";
 
 // test helper functions
@@ -39,28 +33,6 @@ describe("SvmCodec Lib", () => {
     });
 });
 
-
-/*
-describe("WASM Buffer", () => {
-    it("Allocate & free", async () => {
-        await init()
-        const object = {
-            message: "Hello World",
-            status: 200,
-        };
-
-        const buf = SvmCodec.newWasmBuffer(object);
-        const loaded = SvmCodec.loadWasmBuffer(buf);
-        expect(loaded).toEqual(object);
-
-        SvmCodec.wasmBufferFree(buf);
-
-        //expect(sum(1, 1)).toEqual(2);
-    });
-});*/
-
-
-//////////////
 
 describe("Encode InputData", function () {
 
@@ -116,44 +88,6 @@ describe("Encode InputData", function () {
 });
 
 /////////////////
-
-describe("Deploy Template", function () {
-    it("Encodes valid transactions", async function () {
-        await init();
-
-        const data : SvmCodec.DeployData = {
-            svm_version: 1,
-            code_version: 2,
-            name: "My Template",
-            desc: "A few words",
-            code: "C0DE",
-            data: "0000000100000003",
-            ctors: ["init", "start"],
-        };
-
-        SvmCodec.encodeDeployData(data);
-
-    });
-
-    it("Handles errors for invalid transactions", async function () {
-
-        await init();
-
-        const data : SvmCodec.DeployData = {
-            svm_version: 2,
-            code_version: 5,
-            name: "",
-            desc: "A few words",
-            code: "",
-            data: "",
-            ctors: ["init", "start"],
-        };
-
-        SvmCodec.encodeDeployData(data);
-    });
-});
-
-////////////
 
 describe("Spawn Account", function () {
 
