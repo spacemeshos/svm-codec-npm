@@ -15,6 +15,7 @@ export function isInitialized() {
     return (codec !== null)
 }
 
+// User input to the encodeDeployData function
 export interface DeployData {
     svm_version: number,
     code_version: number,
@@ -25,6 +26,7 @@ export interface DeployData {
     ctors: Array<string>
 }
 
+// User input to the encodeSpawnData function
 export interface SpawnData {
     version: number,
     template: string,
@@ -33,6 +35,7 @@ export interface SpawnData {
     calldata: Uint8Array,
 }
 
+// User input to the encodeCallData function
 export interface CallData {
     version: number,
     target: string,
@@ -41,6 +44,7 @@ export interface CallData {
     calldata: Uint8Array,
 }
 
+// Encodes the provided deploy template data
 export function encodeDeployData(data: DeployData) : Uint8Array {
     const buf = newWasmBuffer(data);
     const result = call("wasm_encode_deploy", buf);
@@ -56,6 +60,7 @@ export function encodeDeployData(data: DeployData) : Uint8Array {
     return slice.slice(1);
 }
 
+// Encodes the provided spawn app data
 export function encodeSpawnData(data: SpawnData) : Uint8Array {
     const buf = newWasmBuffer(data);
     const result = call("wasm_encode_spawn", buf);
@@ -71,6 +76,7 @@ export function encodeSpawnData(data: SpawnData) : Uint8Array {
     return slice.slice(1);
 }
 
+// Decodes the provided svm encoded spwan data
 export function decodeSpawnData(data: Uint8Array) : JSON {
     const buf = newWasmBuffer({data: binToString(data)});
     const result = call("wasm_decode_spawn", buf);
@@ -80,6 +86,7 @@ export function decodeSpawnData(data: Uint8Array) : JSON {
     return json;
 }
 
+// Encodes the provided call account data
 export function encodeCallData(data:CallData) : Uint8Array {
     const buf = newWasmBuffer(data);
     const result = call("wasm_encode_call", buf);
@@ -95,6 +102,7 @@ export function encodeCallData(data:CallData) : Uint8Array {
     return slice.slice(1);
 }
 
+// Decodes the svm encoded call account data
 export function decodeCallData(bytes: Uint8Array): JSON {
     const data = binToString(bytes);
     const buf = newWasmBuffer({ data: data });
@@ -105,7 +113,7 @@ export function decodeCallData(bytes: Uint8Array): JSON {
     return json;
 }
 
-// Encodes data provided in josn object and returns the encoded data in a json object
+// Encodes data provided in object and returns the encoded data in a json object
 export function encodeInput(object: any) : JSON {
     const buf = newWasmBuffer(object);
     const result = call("wasm_encode_inputdata", buf);
@@ -115,8 +123,8 @@ export function encodeInput(object: any) : JSON {
     return encoded;
 }
 
-// Decode svm data provided in encodedData json object and returns a json object of the decoded data
-export function decodeInput(encodedData) : JSON {
+// Decode svm data provided in encodedData value and returns a json object of the data
+export function decodeInput(encodedData: any) : JSON {
     const buf = newWasmBuffer(encodedData);
     const result = call("wasm_decode_inputdata", buf);
     const json = loadWasmBufferDataAsJson(result);
@@ -125,7 +133,7 @@ export function decodeInput(encodedData) : JSON {
     return json;
 }
 
-// Encodes binary data provided in array as a hex binary string (without an 0x prefix)
+// Encodes binary provided binary data as a hex binary string (without an 0x prefix)
 export function binToString(array: Uint8Array) : string {
     let result = "";
 
@@ -145,7 +153,6 @@ export function binToString(array: Uint8Array) : string {
 
 
 ///// Internal help functions below
-
 
 // Call an svm_codec function with the provided buffer. Returns result buffer.
 function call(funcName: string, buf) {
@@ -203,14 +210,16 @@ function newWasmBuffer(object: any) {
     return buf;
 }
 
-/*
+
 // Returns a json object of a provided wasm buffer
+// Todo: write test
+// @ts-ignore
 function loadWasmBuffer(buf) : any {
     let length = wasmBufferLength(buf);
     const slice = wasmBufferDataSlice(buf, 0, length);
     const string = new TextDecoder().decode(slice);
     return JSON.parse(string);
-}*/
+}
 
 
 // Returns a utf-8 string representation of the data in an svm_codec buffer
