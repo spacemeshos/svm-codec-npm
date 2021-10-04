@@ -1,6 +1,7 @@
-import * as SvmCodec from '../dist';
 import fs from 'fs';
 import Path from 'path';
+
+import * as SvmCodec from '../dist';
 
 // test helper functions
 function repeatString(s: string, byteLength: number) : string {
@@ -11,15 +12,14 @@ function repeatString(s: string, byteLength: number) : string {
     return s.repeat(m);
 }
 
-
 function generateAddress(s: string) : string {
     return repeatString(s, 20);
 }
 
-async function init() {
+async function init() : Promise<void> {
     const path = Path.resolve(__dirname, 'svm_codec.wasm');
-    const code = fs.readFileSync(path)
-    await SvmCodec.init(code)
+    const code = fs.readFileSync(path);
+    await SvmCodec.init(code);
 }
 
 /// tests
