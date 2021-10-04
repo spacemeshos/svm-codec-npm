@@ -176,6 +176,7 @@ export function binToString(array: Uint8Array) : string {
 
 // Call an svm_codec function with the provided buffer. Returns result buffer.
 function call(funcName: string, buf) : Uint8Array {
+    console.log("caaling svm function: " + funcName);
     return (codec!.exports as any)[funcName](buf)
 }
 

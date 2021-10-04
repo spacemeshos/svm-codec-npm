@@ -200,10 +200,6 @@ describe("Spawn Account", function () {
         expect(() => encodeSpawnData("102030", "", new Uint8Array(0)))
             .toThrow("The value of a specific field is invalid (`template`).");
 
-        /*
-        expect(error).toStrictEqual(
-            "The value of a specific field is invalid (`template`)."
-        );*/
     });
 });
 
@@ -221,7 +217,6 @@ describe("Call Account", function () {
         return SvmCodec.encodeCallData(data);
     }
 
-
     it("Encodes & Decodes valid transaction", async function () {
 
         await init();
@@ -238,13 +233,14 @@ describe("Call Account", function () {
             data: [10, 20],
         });
 
-        const bytes = encodeCallData(
+        const data = encodeCallData(
             target,
             verifyData["data"],
             callData["data"]
         );
 
-        const json = SvmCodec.decodeCallData(bytes);
+
+        const json = SvmCodec.decodeCallData(data);
 
         expect(json).toStrictEqual({
             version: 0,
@@ -268,12 +264,5 @@ describe("Call Account", function () {
         expect(() => encodeCallData("102030", new Uint8Array(), new Uint8Array()))
             .toThrow("The value of a specific field is invalid (`target`).");
 
-        /*
-        expect(error).toStrictEqual(
-            "The value of a specific field is invalid (`target`)."
-        );*/
-
-        //SvmCodec.wasmBufferFree(buf);
-        //SvmCodec.wasmBufferFree(result);
     });
 });
