@@ -52,12 +52,18 @@ export function encodeDeployData(data: DeployData) : Uint8Array {
     const len = wasmBufferLength(result);
     const slice = wasmBufferDataSlice(result, 0, len);
 
+    let errMessage : string = "";
     if (slice[0] !== OK_MARKER) {
-        throw loadWasmBufferError(result);
+        errMessage = loadWasmBufferError(result);
     }
 
     wasmBufferFree(buf);
     wasmBufferFree(result);
+
+    if (errMessage.length > 0) {
+        throw errMessage;
+    }
+
     return slice.slice(1);
 }
 
@@ -69,19 +75,16 @@ export function encodeSpawnData(data: SpawnData) : Uint8Array {
     const len = wasmBufferLength(result);
     const slice = wasmBufferDataSlice(result, 0, len);
 
-    let errorResult  = new ArrayBuffer(0);
-
+    let errMessage : string = "";
     if (slice[0] !== OK_MARKER) {
-        errorResult = new ArrayBuffer(result.byteLength);
-        new Uint8Array(errorResult).set(new Uint8Array(result));
-        throw loadWasmBufferError(result);
+        errMessage = loadWasmBufferError(result);
     }
 
     wasmBufferFree(buf);
     wasmBufferFree(result);
 
-    if (errorResult.byteLength > 0) {
-        throw loadWasmBufferError(errorResult!);
+    if (errMessage.length > 0) {
+        throw errMessage;
     }
 
     return slice.slice(1);
@@ -104,12 +107,18 @@ export function encodeCallData(data:CallData) : Uint8Array {
     const len = wasmBufferLength(result);
     const slice = wasmBufferDataSlice(result, 0, len);
 
+    let errMessage : string = "";
     if (slice[0] !== OK_MARKER) {
-        throw loadWasmBufferError(result);
+        errMessage = loadWasmBufferError(result);
     }
 
     wasmBufferFree(buf);
     wasmBufferFree(result);
+
+    if (errMessage.length > 0) {
+        throw errMessage;
+    }
+
     return slice.slice(1);
 }
 
@@ -166,7 +175,7 @@ export function binToString(array: Uint8Array) : string {
 ///// Internal help functions below
 
 // Call an svm_codec function with the provided buffer. Returns result buffer.
-function call(funcName: string, buf) {
+function call(funcName: string, buf) : Uint8Array {
     return (codec!.exports as any)[funcName](buf)
 }
 
