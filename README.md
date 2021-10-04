@@ -58,7 +58,5 @@ await SvmCodec.init(code);
 -----
 
 ### Known Issues
-- No CI yet.
-- No integration with svm-codec releases is implemented yet.
-- No tight types in Typescript typings yet.
+- integration with svm-codec releases is NYI.
 

@@ -1,4 +1,6 @@
 import * as SvmCodec from "../dist";
+const fs = require('fs');
+const Path = require('path');
 
 // test helper functions
 
@@ -17,8 +19,6 @@ function generateAddress(s: string) : string {
 
 
 async function init() {
-    const fs = require('fs');
-    const Path = require('path');
     const path = Path.resolve(__dirname, 'svm_codec.wasm');
     const code = fs.readFileSync(path)
     await SvmCodec.init(code)
@@ -52,7 +52,6 @@ describe("Encode InputData", function () {
     it("i8", async function () {
         await init();
         await testInputData(["i8"], [-10]);
-
     });
 
     it("u8", async function () {
@@ -131,9 +130,8 @@ describe("Spawn Account", function () {
     it("Handles errors for invalid transactions", async function () {
         await init();
 
-        expect(() => encodeSpawn("102030", "", new Uint8Array(0)))
+        expect(() => {encodeSpawn("102030", "", new Uint8Array(0))})
             .toThrow("The value of a specific field is invalid (`template`).");
-
     });
 });
 
@@ -194,8 +192,8 @@ describe("Call Account", function () {
 
         await init();
 
-        expect(() => encodeCall("102030", new Uint8Array(), new Uint8Array()))
+        expect(() =>
+        {encodeCall("102030", new Uint8Array(), new Uint8Array())})
             .toThrow("The value of a specific field is invalid (`target`).");
-
     });
 });

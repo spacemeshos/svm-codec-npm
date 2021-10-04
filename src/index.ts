@@ -5,13 +5,13 @@ let codec: WebAssembly.Instance;
 
 // Init the library with the binary content of a .wasm file.
 // This function must be called once per client prior to use of any other package functions.
-export async function init(code: BufferSource) {
+export async function init(code: BufferSource) : Promise<void> {
     const wasm = await WebAssembly.compile(code);
     codec = await WebAssembly.instantiate(wasm, {})
 }
 
 // Returns true iff library was initialized with wasm code
-export function isInitialized() {
+export function isInitialized() : boolean {
     return (codec !== null)
 }
 
@@ -41,7 +41,7 @@ export function encodeSpawn(data: Spawn) : Uint8Array {
     const len = wasmBufferLength(result);
     const slice = wasmBufferDataSlice(result, 0, len);
 
-    let errMessage : string = "";
+    let errMessage = "";
     if (slice[0] !== OK_MARKER) {
         errMessage = loadWasmBufferError(result);
     }
@@ -73,7 +73,7 @@ export function encodeCall(data:Call) : Uint8Array {
     const len = wasmBufferLength(result);
     const slice = wasmBufferDataSlice(result, 0, len);
 
-    let errMessage : string = "";
+    let errMessage = "";
     if (slice[0] !== OK_MARKER) {
         errMessage = loadWasmBufferError(result);
     }
@@ -139,42 +139,41 @@ function binToString(array: Uint8Array) : string {
 
 // Call an svm_codec function with the provided buffer. Returns result buffer.
 function call(funcName: string, buf) : Uint8Array {
-    console.log("caaling svm function: " + funcName);
-    return (codec!.exports as any)[funcName](buf)
+    return (codec.exports as any)[funcName](buf)
 }
 
 // Allocates a svm_codec buffer with the provided byte length
 function wasmBufferAlloc(length: number) {
-    return (codec!.exports as any).wasm_alloc(length)
+    return (codec.exports as any).wasm_alloc(length)
 }
 
 // Frees an allocated svm_codec buffer that was previously allocated by svm_codec
 function wasmBufferFree(buf) {
-    return (codec!.exports as any).wasm_free(buf);
+    return (codec.exports as any).wasm_free(buf);
 }
 
 // Returns the bytes length of a wasm_codec buffer
 function wasmBufferLength(buf) {
-    return (codec!.exports as any).wasm_buffer_length(buf);
+    return (codec.exports as any).wasm_buffer_length(buf);
 }
 
 // Frees the data allocated in a svm_codec buffer
 function wasmBufferDataPtr(buf) {
-    return (codec!.exports as any).wasm_buffer_data(buf);
+    return (codec.exports as any).wasm_buffer_data(buf);
 }
 
 // Copies binary data from buf to an svm_codec memory buffer
 function copyToWasmBufferData(buf, data) {
-    let ptr = wasmBufferDataPtr(buf);
-    let memory = (codec!.exports as any).memory.buffer;
-    let view = new Uint8Array(memory);
+    const ptr = wasmBufferDataPtr(buf);
+    const memory = (codec.exports as any).memory.buffer;
+    const view = new Uint8Array(memory);
     view.set([...data], ptr);
 }
 
 // Copies length bytes at an offset from buf to an svm_codec memory buffer
 function wasmBufferDataSlice(buf, offset, length: number) {
-    let ptr = wasmBufferDataPtr(buf);
-    const memory = (codec!.exports as any).memory.buffer;
+    const ptr = wasmBufferDataPtr(buf);
+    const memory = (codec.exports as any).memory.buffer;
     const view = new Uint8Array(memory);
     return view.slice(ptr + offset, ptr + offset + length);
 }
@@ -194,21 +193,9 @@ function newWasmBuffer(object: any) {
     return buf;
 }
 
-
-// Returns a json object of a provided wasm buffer
-// Todo: write test
-// @ts-ignore
-function loadWasmBuffer(buf) : any {
-    let length = wasmBufferLength(buf);
-    const slice = wasmBufferDataSlice(buf, 0, length);
-    const string = new TextDecoder().decode(slice);
-    return JSON.parse(string);
-}
-
-
 // Returns a utf-8 string representation of the data in an svm_codec buffer
 function loadWasmBufferDataAsString(buf) : string {
-    let length = wasmBufferLength(buf);
+    const length = wasmBufferLength(buf);
     const slice = wasmBufferDataSlice(buf, 0, length);
     if (slice[0] !== OK_MARKER) {
         throw loadWasmBufferError(buf)
@@ -221,7 +208,7 @@ function loadWasmBufferDataAsString(buf) : string {
 // Returns a json object representation of the data in a svm_codec buffer
 // Throws an exception if buffer has an error with the exception's string representation
 function loadWasmBufferDataAsJson(buf) : JSON {
-    let length = wasmBufferLength(buf);
+    const length = wasmBufferLength(buf);
     const slice = wasmBufferDataSlice(buf, 0, length);
 
     if (slice[0] === ERR_MARKER) {
@@ -235,7 +222,7 @@ function loadWasmBufferDataAsJson(buf) : JSON {
 
 // Returns a utf-8 string representation of an error in an svm_codec buffer
 function loadWasmBufferError(buf) {
-    let length = wasmBufferLength(buf);
+    const length = wasmBufferLength(buf);
     const slice = wasmBufferDataSlice(buf, 0, length);
     // assert.strictEqual(slice[0], ERR_MARKER);
     return new TextDecoder().decode(slice.slice(1));
