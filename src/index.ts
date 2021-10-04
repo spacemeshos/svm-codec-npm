@@ -1,7 +1,7 @@
 export const OK_MARKER = 1;
 export const ERR_MARKER = 0;
 
-let codec: WebAssembly.Instance;
+let codec: WebAssembly.Instance
 
 // Init the library with the binary content of a .wasm file.
 // This function must be called once per client prior to use of any other package functions.
@@ -12,7 +12,7 @@ export async function init(code: BufferSource) : Promise<void> {
 
 // Returns true iff library was initialized with Wasm code
 export function isInitialized() : boolean {
-    return (codec !== null)
+    return (codec !== undefined)
 }
 
 // User input to the encodeSpawnData function
@@ -119,6 +119,13 @@ export function decodeInput(encodedData: any) : JSON {
 }
 
 
+// Frees an allocated svm_codec buffer that was previously allocated and returned to caller by an api function
+export function wasmBufferFree(buf) : void {
+    return (codec.exports as any).wasm_free(buf);
+}
+
+// internal helper functions
+
 // Encodes binary provided binary data as a hex binary string (without an 0x prefix)
 function binToString(array: Uint8Array) : string {
     let result = "";
@@ -133,13 +140,6 @@ function binToString(array: Uint8Array) : string {
     }
     return result;
 }
-
-// Frees an allocated svm_codec buffer that was previously allocated and returned to caller by an api function
-export function wasmBufferFree(buf) {
-    return (codec.exports as any).wasm_free(buf);
-}
-
-///// Internal help functions below
 
 // Call an svm_codec function with the provided buffer. Returns result buffer.
 function call(funcName: string, buf) : Uint8Array {
