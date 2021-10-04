@@ -28,11 +28,10 @@ svm_codev.wasm is not included in the package as different javascript apps will 
 Add `svm_codec.wasm` to be used by the lib to your app's resources.
 
 ```TypeScript
-
-
-import * as SvmCodec from '@spacemesh/svm-codec';
 import fs from 'fs';
 import Path from 'path';
+
+import * as SvmCodec from '@spacemesh/svm-codec';
 
 const path = Path.resolve(__dirname, 'svm_codec.wasm');
 const code = fs.readFileSync(path);

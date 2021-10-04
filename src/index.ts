@@ -56,7 +56,7 @@ export function encodeSpawn(data: Spawn) : Uint8Array {
     return slice.slice(1);
 }
 
-// Decodes the provided svm encoded spwan data
+// Decodes the provided SVM encoded spawn data
 export function decodeSpawn(data: Uint8Array) : JSON {
     const buf = newWasmBuffer({data: binToString(data)});
     const result = call("wasm_decode_spawn", buf);

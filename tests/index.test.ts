@@ -4,6 +4,7 @@ import Path from 'path';
 import * as SvmCodec from '../dist';
 
 // test helper functions
+
 function repeatString(s: string, byteLength: number) : string {
     const n = s.length;
     const t = byteLength * 2;
@@ -99,7 +100,6 @@ describe("Spawn Account", function () {
         };
 
         return SvmCodec.encodeSpawn(data);
-
     }
 
     it("Encodes & Decodes valid transactions", async function () {
