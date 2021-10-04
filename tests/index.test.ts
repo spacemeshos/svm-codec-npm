@@ -92,8 +92,8 @@ describe("Encode InputData", function () {
 describe("Spawn Account", function () {
 
     /// spawn helper
-    function encodeSpawnData(template: string, name: string, callData: Uint8Array) : Uint8Array {
-        const data : SvmCodec.SpawnData = {
+    function encodeSpawn(template: string, name: string, callData: Uint8Array) : Uint8Array {
+        const data : SvmCodec.Spawn = {
             version: 0,
             template: template,
             name: name,
@@ -101,7 +101,7 @@ describe("Spawn Account", function () {
             calldata: callData
         };
 
-        return SvmCodec.encodeSpawnData(data);
+        return SvmCodec.encodeSpawn(data);
 
     }
 
@@ -114,8 +114,8 @@ describe("Spawn Account", function () {
             data: [10, 20],
         };
         const callData: JSON = SvmCodec.encodeInput(object);
-        const bytes = encodeSpawnData(template, name, callData["data"])
-        const json = SvmCodec.decodeSpawnData(bytes);
+        const bytes = encodeSpawn(template, name, callData["data"])
+        const json = SvmCodec.decodeSpawn(bytes);
         expect(json).toStrictEqual({
             version: 0,
             template: template,
@@ -131,7 +131,7 @@ describe("Spawn Account", function () {
     it("Handles errors for invalid transactions", async function () {
         await init();
 
-        expect(() => encodeSpawnData("102030", "", new Uint8Array(0)))
+        expect(() => encodeSpawn("102030", "", new Uint8Array(0)))
             .toThrow("The value of a specific field is invalid (`template`).");
 
     });
@@ -140,15 +140,15 @@ describe("Spawn Account", function () {
 ////////////////
 
 describe("Call Account", function () {
-    function encodeCallData(target: string, verifyData: Uint8Array, callData: Uint8Array) : Uint8Array {
-        const data : SvmCodec.CallData = {
+    function encodeCall(target: string, verifyData: Uint8Array, callData: Uint8Array) : Uint8Array {
+        const data : SvmCodec.Call = {
             version: 0,
             target: target,
             func_name: "do_something",
             verifydata: verifyData,
             calldata: callData,
         };
-        return SvmCodec.encodeCallData(data);
+        return SvmCodec.encodeCall(data);
     }
 
     it("Encodes & Decodes valid transaction", async function () {
@@ -167,13 +167,13 @@ describe("Call Account", function () {
             data: [10, 20],
         });
 
-        const data = encodeCallData(
+        const data = encodeCall(
             target,
             verifyData["data"],
             callData["data"]
         );
 
-        const json = SvmCodec.decodeCallData(data);
+        const json = SvmCodec.decodeCall(data);
 
         expect(json).toStrictEqual({
             version: 0,
@@ -194,7 +194,7 @@ describe("Call Account", function () {
 
         await init();
 
-        expect(() => encodeCallData("102030", new Uint8Array(), new Uint8Array()))
+        expect(() => encodeCall("102030", new Uint8Array(), new Uint8Array()))
             .toThrow("The value of a specific field is invalid (`target`).");
 
     });

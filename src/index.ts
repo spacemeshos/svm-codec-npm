@@ -16,7 +16,7 @@ export function isInitialized() {
 }
 
 // User input to the encodeSpawnData function
-export interface SpawnData {
+export interface Spawn {
     version: number,
     template: string,
     name: string
@@ -25,7 +25,7 @@ export interface SpawnData {
 }
 
 // User input to the encodeCallData function
-export interface CallData {
+export interface Call {
     version: number,
     target: string,
     func_name: string,
@@ -35,7 +35,7 @@ export interface CallData {
 
 
 // Encodes the provided spawn app data
-export function encodeSpawnData(data: SpawnData) : Uint8Array {
+export function encodeSpawn(data: Spawn) : Uint8Array {
     const buf = newWasmBuffer(data);
     const result = call("wasm_encode_spawn", buf);
     const len = wasmBufferLength(result);
@@ -57,7 +57,7 @@ export function encodeSpawnData(data: SpawnData) : Uint8Array {
 }
 
 // Decodes the provided svm encoded spwan data
-export function decodeSpawnData(data: Uint8Array) : JSON {
+export function decodeSpawn(data: Uint8Array) : JSON {
     const buf = newWasmBuffer({data: binToString(data)});
     const result = call("wasm_decode_spawn", buf);
     const json = loadWasmBufferDataAsJson(result);
@@ -67,7 +67,7 @@ export function decodeSpawnData(data: Uint8Array) : JSON {
 }
 
 // Encodes the provided call account data
-export function encodeCallData(data:CallData) : Uint8Array {
+export function encodeCall(data:Call) : Uint8Array {
     const buf = newWasmBuffer(data);
     const result = call("wasm_encode_call", buf);
     const len = wasmBufferLength(result);
@@ -89,7 +89,7 @@ export function encodeCallData(data:CallData) : Uint8Array {
 }
 
 // Decodes the svm encoded call account data
-export function decodeCallData(bytes: Uint8Array): JSON {
+export function decodeCall(bytes: Uint8Array): JSON {
     const buf = newWasmBuffer({ data: binToString(bytes) });
     const result = call("wasm_decode_call", buf);
     const json = loadWasmBufferDataAsJson(result);
