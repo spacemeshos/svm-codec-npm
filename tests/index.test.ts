@@ -1,4 +1,6 @@
-import {svmCodec} from "../dist";
+//import * as SvmCodec from "../dist";
+
+const SvmCodec = require("../dist");
 
 // test helper functions
 
@@ -9,6 +11,7 @@ function repeatString(s: string, byteLength: number) : string {
     const m = t / n;
     return s.repeat(m);
 }
+
 
 function generateAddress(s: string) : string {
     return repeatString(s, 20);
@@ -36,7 +39,7 @@ async function init() {
     const Path = require('path');
     const path = Path.resolve(__dirname, 'svm_codec.wasm');
     const code = fs.readFileSync(path)
-    await svmCodec.init(code)
+    await SvmCodec.init(code)
 }
 
 /// tests
@@ -44,9 +47,10 @@ async function init() {
 describe("SvmCodec Lib", () => {
     it("Inits wasm lib", async () => {
         await init()
-        expect(svmCodec.isInitialized()).toEqual(true);
+        expect(SvmCodec.isInitialized()).toEqual(true);
     });
 });
+
 
 describe("WASM Buffer", () => {
     it("Allocate & free", async () => {
@@ -56,11 +60,11 @@ describe("WASM Buffer", () => {
             status: 200,
         };
 
-        const buf = svmCodec.newWasmBuffer(object);
-        const loaded = svmCodec.loadWasmBuffer(buf);
+        const buf = SvmCodec.newWasmBuffer(object);
+        const loaded = SvmCodec.loadWasmBuffer(buf);
         expect(loaded).toEqual(object);
 
-        svmCodec.wasmBufferFree(buf);
+        SvmCodec.wasmBufferFree(buf);
 
         //expect(sum(1, 1)).toEqual(2);
     });
@@ -78,8 +82,8 @@ describe("Encode InputData", function () {
             data: data,
         };
 
-        const encoded = svmCodec.encodeInput(calldata);
-        const decoded = svmCodec.decodeInput(encoded);
+        const encoded = SvmCodec.encodeInput(calldata);
+        const decoded = SvmCodec.decodeInput(encoded);
 
         expect(decoded).toStrictEqual(calldata);
     }
@@ -138,17 +142,17 @@ describe("Deploy Template", function () {
             ctors: ["init", "start"],
         };
 
-        const buf = svmCodec.newWasmBuffer(tx);
-        const result = svmCodec.call("wasm_encode_deploy", buf);
-        const len = svmCodec.wasmBufferLength(result);
-        const slice = svmCodec.wasmBufferDataSlice(result, 0, len);
-        expect(slice[0]).toStrictEqual(svmCodec.OK_MARKER);
+        const buf = SvmCodec.newWasmBuffer(tx);
+        const result = SvmCodec.call("wasm_encode_deploy", buf);
+        const len = SvmCodec.wasmBufferLength(result);
+        const slice = SvmCodec.wasmBufferDataSlice(result, 0, len);
+        expect(slice[0]).toStrictEqual(SvmCodec.OK_MARKER);
 
         // `bytes` is a `Uint8Array` holding the encoded `SVM spawn-account` transaction
         //const bytes = slice.slice(1);
 
-        svmCodec.wasmBufferFree(buf);
-        svmCodec.wasmBufferFree(result);
+        SvmCodec.wasmBufferFree(buf);
+        SvmCodec.wasmBufferFree(result);
     });
 
     it("Handles errors for invalid transactions", async function () {
@@ -159,14 +163,14 @@ describe("Deploy Template", function () {
             code_version: 2,
         };
 
-        const buf = svmCodec.newWasmBuffer(tx);
-        const result = svmCodec.call("wasm_encode_deploy", buf);
+        const buf = SvmCodec.newWasmBuffer(tx);
+        const result = SvmCodec.call("wasm_encode_deploy", buf);
 
-        const error = svmCodec.loadWasmBufferError(result);
+        const error = SvmCodec.loadWasmBufferError(result);
         expect(error).toStrictEqual("A non-optional field was missing (`name`).");
 
-        svmCodec.wasmBufferFree(buf);
-        svmCodec.wasmBufferFree(result);
+        SvmCodec.wasmBufferFree(buf);
+        SvmCodec.wasmBufferFree(result);
     });
 });
 
@@ -183,24 +187,24 @@ describe("Spawn Account", function () {
             ctor_name: "initialize",
             calldata: calldata,
         };
-        const buf = svmCodec.newWasmBuffer(tx);
-        const result = svmCodec.call("wasm_encode_spawn", buf);
-        const len = svmCodec.wasmBufferLength(result);
-        const slice = svmCodec.wasmBufferDataSlice(result, 0, len);
-        expect(slice[0]).toStrictEqual(svmCodec.OK_MARKER);
-        svmCodec.wasmBufferFree(buf);
-        svmCodec.wasmBufferFree(result);
+        const buf = SvmCodec.newWasmBuffer(tx);
+        const result = SvmCodec.call("wasm_encode_spawn", buf);
+        const len = SvmCodec.wasmBufferLength(result);
+        const slice = SvmCodec.wasmBufferDataSlice(result, 0, len);
+        expect(slice[0]).toStrictEqual(SvmCodec.OK_MARKER);
+        SvmCodec.wasmBufferFree(buf);
+        SvmCodec.wasmBufferFree(result);
         return slice.slice(1);
     }
 
     // Span helper
     function decodeSpawn(bytes: Uint8Array) : JSON {
         const data = binToString(bytes);
-        const buf = svmCodec.newWasmBuffer({ data: data });
-        const result = svmCodec.call("wasm_decode_spawn", buf);
-        const json = svmCodec.loadWasmBufferDataAsJson(result);
-        svmCodec.wasmBufferFree(buf);
-        svmCodec.wasmBufferFree(result);
+        const buf = SvmCodec.newWasmBuffer({ data: data });
+        const result = SvmCodec.call("wasm_decode_spawn", buf);
+        const json = SvmCodec.loadWasmBufferDataAsJson(result);
+        SvmCodec.wasmBufferFree(buf);
+        SvmCodec.wasmBufferFree(result);
         return json;
     }
 
@@ -212,7 +216,7 @@ describe("Spawn Account", function () {
             abi: ["i32", "i64"],
             data: [10, 20],
         };
-        const calldata: JSON = svmCodec.encodeInput(object);
+        const calldata: JSON = SvmCodec.encodeInput(object);
         const bytes = encodeSpawn(template, name, calldata["data"]);
         const json = decodeSpawn(bytes);
         expect(json).toStrictEqual({
@@ -235,15 +239,15 @@ describe("Spawn Account", function () {
             template: "102030",
         };
 
-        const buf = svmCodec.newWasmBuffer(tx);
-        const result = svmCodec.call("wasm_encode_spawn", buf);
-        const error = svmCodec.loadWasmBufferError(result);
+        const buf = SvmCodec.newWasmBuffer(tx);
+        const result = SvmCodec.call("wasm_encode_spawn", buf);
+        const error = SvmCodec.loadWasmBufferError(result);
         expect(error).toStrictEqual(
             "The value of a specific field is invalid (`template`)."
         );
 
-        svmCodec.wasmBufferFree(buf);
-        svmCodec.wasmBufferFree(result);
+        SvmCodec.wasmBufferFree(buf);
+        SvmCodec.wasmBufferFree(result);
 
     });
 });
@@ -260,25 +264,25 @@ describe("Call Account", function () {
             calldata: calldata,
         };
 
-        const buf = svmCodec.newWasmBuffer(tx);
-        const result = svmCodec.call("wasm_encode_call", buf);
-        const len = svmCodec.wasmBufferLength(result);
-        const slice = svmCodec.wasmBufferDataSlice(result, 0, len);
-        expect(slice[0]).toStrictEqual(svmCodec.OK_MARKER);
+        const buf = SvmCodec.newWasmBuffer(tx);
+        const result = SvmCodec.call("wasm_encode_call", buf);
+        const len = SvmCodec.wasmBufferLength(result);
+        const slice = SvmCodec.wasmBufferDataSlice(result, 0, len);
+        expect(slice[0]).toStrictEqual(SvmCodec.OK_MARKER);
 
-        svmCodec.wasmBufferFree(buf);
-        svmCodec.wasmBufferFree(result);
+        SvmCodec.wasmBufferFree(buf);
+        SvmCodec.wasmBufferFree(result);
 
         return slice.slice(1);
     }
 
     function decodeCall(bytes: Uint8Array): JSON {
         const data = binToString(bytes);
-        const buf = svmCodec.newWasmBuffer({ data: data });
-        const result = svmCodec.call("wasm_decode_call", buf);
-        const json = svmCodec.loadWasmBufferDataAsJson(result);
-        svmCodec.wasmBufferFree(buf);
-        svmCodec.wasmBufferFree(result);
+        const buf = SvmCodec.newWasmBuffer({ data: data });
+        const result = SvmCodec.call("wasm_decode_call", buf);
+        const json = SvmCodec.loadWasmBufferDataAsJson(result);
+        SvmCodec.wasmBufferFree(buf);
+        SvmCodec.wasmBufferFree(result);
 
         return json;
     }
@@ -288,11 +292,11 @@ describe("Call Account", function () {
         await init();
 
         const target = generateAddress("1020304050");
-        const verifydata = svmCodec.encodeInput( {
+        const verifydata = SvmCodec.encodeInput( {
             abi: ["bool", "i8"],
             data: [true, 5],
         });
-        const calldata = svmCodec.encodeInput( {
+        const calldata = SvmCodec.encodeInput( {
             abi: ["i32", "i64"],
             data: [10, 20],
         });
@@ -324,14 +328,14 @@ describe("Call Account", function () {
         await init();
 
         const tx = { version: 0, target: "102030" };
-        const buf = svmCodec.newWasmBuffer(tx);
-        const result = svmCodec.call("wasm_encode_call", buf);
-        const error = svmCodec.loadWasmBufferError(result);
+        const buf = SvmCodec.newWasmBuffer(tx);
+        const result = SvmCodec.call("wasm_encode_call", buf);
+        const error = SvmCodec.loadWasmBufferError(result);
         expect(error).toStrictEqual(
             "The value of a specific field is invalid (`target`)."
         );
 
-        svmCodec.wasmBufferFree(buf);
-        svmCodec.wasmBufferFree(result);
+        SvmCodec.wasmBufferFree(buf);
+        SvmCodec.wasmBufferFree(result);
     });
 });
