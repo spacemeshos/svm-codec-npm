@@ -211,7 +211,7 @@ describe("Call Account", function () {
             version: 0,
             target: target,
             func_name: "do_something",
-            verifydata: SvmCodec.binToString(verifyData),
+            verifydata: verifyData,
             calldata: callData,
         };
         return SvmCodec.encodeCallData(data);
@@ -238,7 +238,6 @@ describe("Call Account", function () {
             verifyData["data"],
             callData["data"]
         );
-
 
         const json = SvmCodec.decodeCallData(data);
 

@@ -40,7 +40,7 @@ export interface CallData {
     version: number,
     target: string,
     func_name: string,
-    verifydata: string,
+    verifydata: Uint8Array,
     calldata: Uint8Array,
 }
 
@@ -124,8 +124,7 @@ export function encodeCallData(data:CallData) : Uint8Array {
 
 // Decodes the svm encoded call account data
 export function decodeCallData(bytes: Uint8Array): JSON {
-    const data = binToString(bytes);
-    const buf = newWasmBuffer({ data: data });
+    const buf = newWasmBuffer({ data: binToString(bytes) });
     const result = call("wasm_decode_call", buf);
     const json = loadWasmBufferDataAsJson(result);
     wasmBufferFree(buf);
@@ -156,9 +155,7 @@ export function decodeInput(encodedData: any) : JSON {
 // Encodes binary provided binary data as a hex binary string (without an 0x prefix)
 export function binToString(array: Uint8Array) : string {
     let result = "";
-
     for (const b of array) {
-        // toString takes no arg????
         let s = b.toString(16);
 
         // padding
@@ -167,7 +164,6 @@ export function binToString(array: Uint8Array) : string {
         }
         result += s;
     }
-
     return result;
 }
 
