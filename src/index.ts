@@ -10,7 +10,7 @@ export async function init(code: BufferSource) : Promise<void> {
     codec = await WebAssembly.instantiate(wasm, {})
 }
 
-// Returns true iff library was initialized with wasm code
+// Returns true iff library was initialized with Wasm code
 export function isInitialized() : boolean {
     return (codec !== null)
 }
@@ -221,9 +221,12 @@ function loadWasmBufferDataAsJson(buf) : JSON {
 }
 
 // Returns a utf-8 string representation of an error in an svm_codec buffer
-function loadWasmBufferError(buf) {
+function loadWasmBufferError(buf) : string {
     const length = wasmBufferLength(buf);
     const slice = wasmBufferDataSlice(buf, 0, length);
-    // assert.strictEqual(slice[0], ERR_MARKER);
+    if (slice[0] !== ERR_MARKER) {
+        return "wasm buffer doesn't have an error."
+    }
+
     return new TextDecoder().decode(slice.slice(1));
 }
