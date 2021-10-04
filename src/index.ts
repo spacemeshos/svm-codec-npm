@@ -88,7 +88,7 @@ export function encodeCall(data:Call) : Uint8Array {
     return slice.slice(1);
 }
 
-// Decodes the svm encoded call account data
+// Decodes the SVM encoded call account data
 export function decodeCall(bytes: Uint8Array): JSON {
     const buf = newWasmBuffer({ data: binToString(bytes) });
     const result = call("wasm_decode_call", buf);
@@ -108,7 +108,7 @@ export function encodeInput(object: any) : JSON {
     return encoded;
 }
 
-// Decode svm data provided in encodedData value and returns a json object of the data
+// Decode SVM data provided in encodedData value and returns a json object of the data
 export function decodeInput(encodedData: any) : JSON {
     const buf = newWasmBuffer(encodedData);
     const result = call("wasm_decode_inputdata", buf);
