@@ -134,6 +134,10 @@ function binToString(array: Uint8Array) : string {
     return result;
 }
 
+// Frees an allocated svm_codec buffer that was previously allocated and returned to caller by an api function
+export function wasmBufferFree(buf) {
+    return (codec.exports as any).wasm_free(buf);
+}
 
 ///// Internal help functions below
 
@@ -145,11 +149,6 @@ function call(funcName: string, buf) : Uint8Array {
 // Allocates a svm_codec buffer with the provided byte length
 function wasmBufferAlloc(length: number) {
     return (codec.exports as any).wasm_alloc(length)
-}
-
-// Frees an allocated svm_codec buffer that was previously allocated by svm_codec
-function wasmBufferFree(buf) {
-    return (codec.exports as any).wasm_free(buf);
 }
 
 // Returns the bytes length of a wasm_codec buffer

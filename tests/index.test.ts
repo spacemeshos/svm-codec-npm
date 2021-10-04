@@ -23,7 +23,7 @@ async function init() : Promise<void> {
     await SvmCodec.init(code);
 }
 
-/// tests
+// tests
 
 describe("SvmCodec Lib", () => {
     it("Inits wasm lib", async () => {
