@@ -44,6 +44,7 @@ export interface CallData {
     calldata: Uint8Array,
 }
 
+
 // Encodes the provided deploy template data
 export function encodeDeployData(data: DeployData) : Uint8Array {
     const buf = newWasmBuffer(data);
@@ -60,6 +61,7 @@ export function encodeDeployData(data: DeployData) : Uint8Array {
     return slice.slice(1);
 }
 
+
 // Encodes the provided spawn app data
 export function encodeSpawnData(data: SpawnData) : Uint8Array {
     const buf = newWasmBuffer(data);
@@ -67,12 +69,21 @@ export function encodeSpawnData(data: SpawnData) : Uint8Array {
     const len = wasmBufferLength(result);
     const slice = wasmBufferDataSlice(result, 0, len);
 
+    let errorResult  = new ArrayBuffer(0);
+
     if (slice[0] !== OK_MARKER) {
+        errorResult = new ArrayBuffer(result.byteLength);
+        new Uint8Array(errorResult).set(new Uint8Array(result));
         throw loadWasmBufferError(result);
     }
 
     wasmBufferFree(buf);
     wasmBufferFree(result);
+
+    if (errorResult.byteLength > 0) {
+        throw loadWasmBufferError(errorResult!);
+    }
+
     return slice.slice(1);
 }
 
@@ -256,5 +267,3 @@ function loadWasmBufferError(buf) {
     // assert.strictEqual(slice[0], ERR_MARKER);
     return new TextDecoder().decode(slice.slice(1));
 }
-
-

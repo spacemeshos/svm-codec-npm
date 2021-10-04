@@ -6,8 +6,6 @@
 
 import * as SvmCodec from "../dist";
 
-//const SvmCodec = require("../dist");
-
 // test helper functions
 
 function repeatString(s: string, byteLength: number) : string {
@@ -120,7 +118,7 @@ describe("Encode InputData", function () {
 /////////////////
 
 describe("Deploy Template", function () {
-    it("Encodes & Decodes valid transactions", async function () {
+    it("Encodes valid transactions", async function () {
         await init();
 
         const data : SvmCodec.DeployData = {
@@ -141,7 +139,17 @@ describe("Deploy Template", function () {
 
         await init();
 
-        // todo: what will be invalid DeployData data input?
+        const data : SvmCodec.DeployData = {
+            svm_version: 2,
+            code_version: 5,
+            name: "",
+            desc: "A few words",
+            code: "",
+            data: "",
+            ctors: ["init", "start"],
+        };
+
+        SvmCodec.encodeDeployData(data);
     });
 });
 
