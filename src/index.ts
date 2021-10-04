@@ -118,8 +118,9 @@ export function decodeInput(encodedData: any) : JSON {
     return json;
 }
 
+
 // Encodes binary provided binary data as a hex binary string (without an 0x prefix)
-export function binToString(array: Uint8Array) : string {
+function binToString(array: Uint8Array) : string {
     let result = "";
     for (const b of array) {
         let s = b.toString(16);
