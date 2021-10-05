@@ -41,10 +41,7 @@ export function encodeSpawn(data: Spawn) : Uint8Array {
     const len = wasmBufferLength(result);
     const slice = wasmBufferDataSlice(result, 0, len);
 
-    let errMessage = "";
-    if (slice[0] !== OK_MARKER) {
-        errMessage = loadWasmBufferError(result);
-    }
+    let errMessage = (slice[0] !== OK_MARKER) ? loadWasmBufferError(result) : "";
 
     wasmBufferFree(buf);
     wasmBufferFree(result);
@@ -73,10 +70,7 @@ export function encodeCall(data:Call) : Uint8Array {
     const len = wasmBufferLength(result);
     const slice = wasmBufferDataSlice(result, 0, len);
 
-    let errMessage = "";
-    if (slice[0] !== OK_MARKER) {
-        errMessage = loadWasmBufferError(result);
-    }
+    let errMessage = (slice[0] !== OK_MARKER) ? loadWasmBufferError(result) : "";
 
     wasmBufferFree(buf);
     wasmBufferFree(result);
@@ -118,7 +112,6 @@ export function decodeInput(encodedData: any) : JSON {
     return json;
 }
 
-
 // Frees an allocated svm_codec buffer that was previously allocated and returned to caller by an api function
 export function wasmBufferFree(buf) : void {
     return (codec.exports as any).wasm_free(buf);
@@ -143,6 +136,9 @@ function binToString(array: Uint8Array) : string {
 
 // Call an svm_codec function with the provided buffer. Returns result buffer.
 function call(funcName: string, buf) : Uint8Array {
+    if (codec === undefined) {
+        throw new Error("Svm codec library is not initialized.");
+    }
     return (codec.exports as any)[funcName](buf)
 }
 
