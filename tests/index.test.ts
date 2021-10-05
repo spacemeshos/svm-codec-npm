@@ -27,6 +27,7 @@ async function init() : Promise<void> {
 
 describe("SvmCodec Lib", () => {
     it("Inits wasm lib", async () => {
+        expect(SvmCodec.isInitialized()).toEqual(false);
         await init()
         expect(SvmCodec.isInitialized()).toEqual(true);
     });

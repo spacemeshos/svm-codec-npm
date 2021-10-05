@@ -1,7 +1,7 @@
 export const OK_MARKER = 1;
 export const ERR_MARKER = 0;
 
-let codec: WebAssembly.Instance
+let codec: WebAssembly.Instance;
 
 // Init the library with the binary content of a .wasm file.
 // This function must be called once per client prior to use of any other package functions.
