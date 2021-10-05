@@ -144,21 +144,34 @@ function call(funcName: string, buf) : Uint8Array {
 
 // Allocates a svm_codec buffer with the provided byte length
 function wasmBufferAlloc(length: number) {
+    if (codec === undefined) {
+        throw new Error("Svm codec library is not initialized.");
+    }
     return (codec.exports as any).wasm_alloc(length)
 }
 
 // Returns the bytes length of a wasm_codec buffer
 function wasmBufferLength(buf) {
+    if (codec === undefined) {
+        throw new Error("Svm codec library is not initialized.");
+    }
     return (codec.exports as any).wasm_buffer_length(buf);
 }
 
 // Frees the data allocated in a svm_codec buffer
 function wasmBufferDataPtr(buf) {
+    if (codec === undefined) {
+        throw new Error("Svm codec library is not initialized.");
+    }
     return (codec.exports as any).wasm_buffer_data(buf);
 }
 
 // Copies binary data from buf to an svm_codec memory buffer
 function copyToWasmBufferData(buf, data) {
+    if (codec === undefined) {
+        throw new Error("Svm codec library is not initialized.");
+    }
+
     const ptr = wasmBufferDataPtr(buf);
     const memory = (codec.exports as any).memory.buffer;
     const view = new Uint8Array(memory);
@@ -167,6 +180,9 @@ function copyToWasmBufferData(buf, data) {
 
 // Copies length bytes at an offset from buf to an svm_codec memory buffer
 function wasmBufferDataSlice(buf, offset, length: number) {
+    if (codec === undefined) {
+        throw new Error("Svm codec library is not initialized.");
+    }
     const ptr = wasmBufferDataPtr(buf);
     const memory = (codec.exports as any).memory.buffer;
     const view = new Uint8Array(memory);
@@ -199,7 +215,6 @@ function loadWasmBufferDataAsString(buf) : string {
     return new TextDecoder().decode(slice.slice(1));
 }
 
-
 // Returns a json object representation of the data in a svm_codec buffer
 // Throws an exception if buffer has an error with the exception's string representation
 function loadWasmBufferDataAsJson(buf) : JSON {
@@ -211,7 +226,6 @@ function loadWasmBufferDataAsJson(buf) : JSON {
     }
 
     const string = loadWasmBufferDataAsString(buf);
-
     return JSON.parse(string);
 }
 
